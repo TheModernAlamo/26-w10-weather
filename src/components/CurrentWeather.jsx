@@ -1,8 +1,12 @@
 import { MapPin, Droplets, Wind, Umbrella, Thermometer } from 'lucide-react'
 import WeatherIcon from './WeatherIcon'
+import { convertTemp } from '../utils/temperature'
 
-export default function CurrentWeather({ city, currentWeather, weatherInfo }) {
+export default function CurrentWeather({ city, currentWeather, weatherInfo, unit = 'C' }) {
   if (!currentWeather) return null
+
+  const tempDisplay = convertTemp(currentWeather.temperature_2m, unit)
+  const apparentTempDisplay = convertTemp(currentWeather.apparent_temperature, unit)
 
   return (
     <article className="weather-card current-weather-card">
@@ -29,11 +33,11 @@ export default function CurrentWeather({ city, currentWeather, weatherInfo }) {
         </div>
         <div className="temperature-group">
           <div className="temp-display">
-            <span className="temp-value">{Math.round(currentWeather.temperature_2m)}</span>
-            <span className="temp-unit">°C</span>
+            <span className="temp-value">{tempDisplay}</span>
+            <span className="temp-unit">°{unit}</span>
           </div>
           <div className="apparent-temp">
-            체감 온도 <strong>{Math.round(currentWeather.apparent_temperature)}°C</strong>
+            체감 온도 <strong>{apparentTempDisplay}°{unit}</strong>
           </div>
         </div>
       </div>
@@ -74,4 +78,3 @@ export default function CurrentWeather({ city, currentWeather, weatherInfo }) {
     </article>
   )
 }
-

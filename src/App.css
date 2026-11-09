@@ -1,5 +1,112 @@
-/* 실시간 날씨·미세먼지 대시보드 고도화 스타일 */
+/* ==========================================================================
+   실시간 날씨·미세먼지 대시보드 - 스마트 커스터마이징 스타일
+   ========================================================================== */
 
+/* 1. 최상위 래퍼 및 동적 배경 테마 시스템 */
+.weather-dashboard-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  box-sizing: border-box;
+  transition: background 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 1-1. 테마별 배경 그라데이션 */
+.theme-day-clear {
+  background: radial-gradient(circle at 10% 20%, rgba(224, 242, 254, 0.7) 0%, rgba(240, 249, 255, 0.4) 90%),
+              linear-gradient(135deg, #e0f2fe 0%, #f0fdf4 100%);
+}
+
+.theme-night-clear {
+  background: radial-gradient(circle at 80% 10%, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.95) 100%),
+              linear-gradient(160deg, #0f172a 0%, #1e1b4b 100%);
+  color: #e2e8f0;
+}
+
+.theme-day-partly {
+  background: linear-gradient(135deg, #f0f9ff 0%, #e2e8f0 100%);
+}
+
+.theme-night-partly {
+  background: linear-gradient(150deg, #1e293b 0%, #0f172a 100%);
+  color: #e2e8f0;
+}
+
+.theme-rain {
+  background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 50%, #94a3b8 100%);
+}
+
+.theme-snow {
+  background: linear-gradient(135deg, #f8fafc 0%, #e0e7ff 50%, #ede9fe 100%);
+}
+
+.theme-thunder {
+  background: linear-gradient(135deg, #2e1065 0%, #1e1b4b 50%, #0f172a 100%);
+  color: #f3e8ff;
+}
+
+.theme-fog {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+}
+
+/* 야간 및 뇌우 테마 시 텍스트 및 카드 시인성 보정 */
+.theme-night-clear .dashboard-title,
+.theme-night-partly .dashboard-title,
+.theme-thunder .dashboard-title {
+  color: #ffffff;
+}
+
+.theme-night-clear .weather-card,
+.theme-night-partly .weather-card,
+.theme-thunder .weather-card {
+  background-color: rgba(30, 41, 59, 0.85);
+  border-color: rgba(71, 85, 105, 0.4);
+  backdrop-filter: blur(12px);
+  color: #f1f5f9;
+}
+
+.theme-night-clear .city-pill-btn,
+.theme-night-partly .city-pill-btn,
+.theme-thunder .city-pill-btn {
+  background-color: rgba(30, 41, 59, 0.8);
+  border-color: rgba(71, 85, 105, 0.5);
+  color: #cbd5e1;
+}
+
+.theme-night-clear .search-input-wrapper,
+.theme-night-partly .search-input-wrapper,
+.theme-thunder .search-input-wrapper {
+  background-color: rgba(30, 41, 59, 0.85);
+  border-color: rgba(71, 85, 105, 0.5);
+  color: #ffffff;
+}
+
+.theme-night-clear .search-input,
+.theme-night-partly .search-input,
+.theme-thunder .search-input {
+  color: #ffffff;
+}
+
+.theme-night-clear .search-dropdown-menu,
+.theme-night-partly .search-dropdown-menu,
+.theme-thunder .search-dropdown-menu {
+  background-color: #1e293b;
+  border-color: #334155;
+  color: #ffffff;
+}
+
+.theme-night-clear .search-dropdown-item:hover,
+.theme-night-partly .search-dropdown-item:hover,
+.theme-thunder .search-dropdown-item:hover {
+  background-color: #334155;
+}
+
+.theme-night-clear .item-city-name,
+.theme-night-partly .item-city-name,
+.theme-thunder .item-city-name {
+  color: #ffffff;
+}
+
+/* 2. 메인 컨테이너 */
 .weather-dashboard {
   width: 100%;
   max-width: 980px;
@@ -12,7 +119,7 @@
 }
 
 /* ==========================================================================
-   1. 헤더 영역
+   3. 헤더 영역 및 단위 토글 스위치
    ========================================================================== */
 .dashboard-header {
   display: flex;
@@ -52,6 +159,39 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* 섭씨/화씨 슬라이딩 단위 토글 버튼 */
+.unit-toggle-group {
+  display: inline-flex;
+  background-color: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.unit-btn {
+  background: transparent;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.unit-btn:hover {
+  color: var(--text-h);
+}
+
+.unit-btn.active {
+  background-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
 }
 
 .last-updated {
@@ -103,7 +243,7 @@
 }
 
 /* ==========================================================================
-   2. 도시 검색창 (CitySearch)
+   4. 도시 검색창 (CitySearch)
    ========================================================================== */
 .search-section {
   width: 100%;
@@ -231,7 +371,7 @@
 }
 
 /* ==========================================================================
-   3. 도시 빠른 선택 탭/칩 바
+   5. 도시 빠른 선택 탭/칩 바
    ========================================================================== */
 .city-selector-nav {
   width: 100%;
@@ -286,7 +426,7 @@
 }
 
 /* ==========================================================================
-   4. 상태 표시 (로딩 / 에러)
+   6. 상태 표시 (로딩 / 에러)
    ========================================================================== */
 .status-container {
   display: flex;
@@ -354,7 +494,7 @@
 }
 
 /* ==========================================================================
-   5. 메인 레이아웃 및 카드 공통
+   7. 메인 레이아웃 및 카드 공통
    ========================================================================== */
 .dashboard-layout-stack {
   display: flex;
@@ -398,7 +538,157 @@
 }
 
 /* ==========================================================================
-   6. 현재 날씨 카드 (CurrentWeather)
+   8. 항공편 결항/지연 위험도 알림 카드 (FlightAlertCard)
+   ========================================================================== */
+.flight-alert-card {
+  border-left: 5px solid;
+  gap: 16px;
+  padding: 20px 24px;
+}
+
+.flight-card-normal {
+  border-left-color: #10b981;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.04) 0%, transparent 100%);
+}
+
+.flight-card-caution {
+  border-left-color: #f59e0b;
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.06) 0%, transparent 100%);
+}
+
+.flight-card-warning {
+  border-left-color: #ef4444;
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, transparent 100%);
+}
+
+.flight-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.flight-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.plane-icon-bubble {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(59, 130, 246, 0.1);
+  color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flight-main-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  color: var(--text-h);
+}
+
+.airport-target-name {
+  font-size: 13px;
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.flight-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.flight-badge-normal {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.flight-badge-caution {
+  background-color: rgba(245, 158, 11, 0.14);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.4);
+}
+
+.flight-badge-warning {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+  }
+}
+
+.flight-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.flight-summary-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+  margin: 0;
+}
+
+.flight-reasons-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.flight-reason-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.reason-bullet {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.flight-card-footer {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text);
+  opacity: 0.8;
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+}
+
+.flight-info-icon {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ==========================================================================
+   9. 현재 날씨 카드 (CurrentWeather)
    ========================================================================== */
 .city-badge {
   display: inline-flex;
@@ -505,7 +795,7 @@
 }
 
 /* ==========================================================================
-   7. 미세먼지 카드 (AirQualityCard)
+   10. 미세먼지 카드 (AirQualityCard)
    ========================================================================== */
 .aq-title-group {
   display: flex;
@@ -617,7 +907,7 @@
 }
 
 /* ==========================================================================
-   8. 24시간 시간별 기온 차트 (HourlyChart)
+   11. 24시간 시간별 기온 차트 (HourlyChart)
    ========================================================================== */
 .hourly-chart-card {
   gap: 16px;
@@ -691,7 +981,7 @@
 }
 
 /* ==========================================================================
-   9. 7일간 주간 예보 (WeeklyForecast)
+   12. 7일간 주간 예보 (WeeklyForecast)
    ========================================================================== */
 .weekly-forecast-card {
   gap: 16px;
@@ -846,7 +1136,7 @@
 }
 
 /* ==========================================================================
-   10. 푸터
+   13. 푸터
    ========================================================================== */
 .dashboard-footer {
   border-top: 1px solid var(--border);

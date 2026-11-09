@@ -1,8 +1,9 @@
 import { Calendar, Umbrella } from 'lucide-react'
 import { getWeatherInfo } from '../api/weather'
 import WeatherIcon from './WeatherIcon'
+import { convertTemp } from '../utils/temperature'
 
-export default function WeeklyForecast({ dailyData }) {
+export default function WeeklyForecast({ dailyData, unit = 'C' }) {
   if (!dailyData || !dailyData.time) return null
 
   const daysOfWeek = ['일', '월', '화', '수', '목', '금', '토']
@@ -20,17 +21,20 @@ export default function WeeklyForecast({ dailyData }) {
     const monthDay = `${date.getMonth() + 1}.${date.getDate()}`
     const label = idx === 0 ? '오늘' : idx === 1 ? '내일' : `${dayName}요일`
 
-    const min = Math.round(dailyData.temperature_2m_min[idx])
-    const max = Math.round(dailyData.temperature_2m_max[idx])
+    const rawMin = dailyData.temperature_2m_min[idx]
+    const rawMax = dailyData.temperature_2m_max[idx]
+    const min = convertTemp(rawMin, unit)
+    const max = convertTemp(rawMax, unit)
+
     const precip = dailyData.precipitation_probability_max
       ? dailyData.precipitation_probability_max[idx]
       : null
     const code = dailyData.weather_code[idx]
     const weather = getWeatherInfo(code)
 
-    // 막대 바의 시작 위치(left%)와 길이(width%)
-    const leftPercent = ((min - globalMin) / globalRange) * 100
-    const widthPercent = Math.max(8, ((max - min) / globalRange) * 100)
+    // 막대 바의 시작 위치(left%)와 길이(width%)는 원본 섭씨 기준 비율 유지
+    const leftPercent = ((rawMin - globalMin) / globalRange) * 100
+    const widthPercent = Math.max(8, ((rawMax - rawMin) / globalRange) * 100)
 
     return {
       dateStr,
@@ -53,7 +57,7 @@ export default function WeeklyForecast({ dailyData }) {
           <Calendar size={18} />
           <h2>향후 7일간 주간 일기예보</h2>
         </div>
-        <span className="weekly-subtitle">최저 / 최고 기온</span>
+        <span className="weekly-subtitle">최저 / 최고 ({unit === 'C' ? '°C' : '°F'})</span>
       </div>
 
       <div className="weekly-list">
@@ -110,4 +114,3 @@ export default function WeeklyForecast({ dailyData }) {
     </article>
   )
 }
-

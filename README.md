@@ -57,11 +57,16 @@ Open-Meteo 글로벌 기상 위성 API와 연동하여 실시간 날씨 및 대�
 
 ## 커스터마이징한 부분
 
-1. **6개 모듈형 컴포넌트 분리 (`src/components/`)**:
-   - `CurrentWeather.jsx`, `AirQualityCard.jsx`, `HourlyChart.jsx`, `WeeklyForecast.jsx`, `CitySearch.jsx`, `WeatherIcon.jsx`로 깔끔하게 모듈화
-2. **제로 디펜던시 순수 SVG 24시간 꺾은선 기온 차트**:
+1. **주야간(is_day) & 기상 상태 연동 동적 비주얼 테마 시스템**:
+   - `is_day`(낮/밤)와 `weather_code`를 조합하여 맑은 낮, 맑은 밤, 비, 눈, 뇌우, 안개, 흐림 등 기상에 어울리는 부드러운 그라데이션과 야간 다크모드 가독성 보정 스타일을 자동 적용
+2. **공항 인접 지역 감지 및 항공편 결항/지연 위험도 분석 카드 (`FlightAlertCard`)**:
+   - 김포, 인천, 제주, 김해 등 주요 공항 권역 또는 검색어에 '공항/Airport'가 포함된 지역을 자동 감지
+   - 풍속(≥30, ≥45 km/h), 뇌우(95), 폭설(75), 짙은 안개/저시정(45, 48) 등 항공 안전 위해 요소를 다차원 분석하여 **정상 운항(Normal)**, **지연 주의(Caution)**, **결항/지연 위험(High Risk)** 3단계 상태 및 원인 상세 제공
+3. **섭씨(°C) ⟷ 화씨(°F) 원클릭 단위 변환 토글**:
+   - 상단 헤더에 슬라이딩 스위치를 배치하여, 클릭 한 번으로 현재 기온, 체감온도, 24시간 SVG 차트의 곡선 좌표/레이블, 7일간 예보의 최고/최저 기온까지 전역 실시간 동기화
+4. **6개 모듈형 컴포넌트 분리 (`src/components/`)**:
+   - `CurrentWeather.jsx`, `AirQualityCard.jsx`, `HourlyChart.jsx`, `WeeklyForecast.jsx`, `CitySearch.jsx`, `FlightAlertCard.jsx`, `WeatherIcon.jsx`로 단일 책임 원칙 준수 모듈화
+5. **제로 디펜던시 순수 SVG 24시간 꺾은선 기온 차트**:
    - 무거운 외부 차트 라이브러리 없이 인라인 SVG와 그라데이션 면적을 활용한 초경량 차트 및 모바일 가로 스크롤 구현
-3. **향후 7일간 최고/최저 기온 비례 바 및 강수 확률 뱃지**:
-   - 요일별 날씨 아이콘과 함께 온도 범위 시각화 막대 바 제공
-4. **400ms 디바운스 적용 전 세계 Geocoding 자동완성 드롭다운**:
+6. **400ms 디바운스 적용 전 세계 Geocoding 자동완성 드롭다운**:
    - 외부 클릭 감지(`mousedown`) 및 ESC 키 닫기 이벤트 핸들러 탑재

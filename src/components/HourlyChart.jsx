@@ -1,9 +1,9 @@
 import { useMemo } from 'react'
 import { Clock, TrendingUp, TrendingDown } from 'lucide-react'
 import { getWeatherInfo } from '../api/weather'
-import WeatherIcon from './WeatherIcon'
+import { convertTemp } from '../utils/temperature'
 
-export default function HourlyChart({ hourlyData }) {
+export default function HourlyChart({ hourlyData, unit = 'C' }) {
   const chartData = useMemo(() => {
     if (!hourlyData || !hourlyData.time || !hourlyData.temperature_2m) return []
 
@@ -25,15 +25,16 @@ export default function HourlyChart({ hourlyData }) {
     return times.map((t, idx) => {
       const date = new Date(t)
       const hour = date.getHours()
+      const raw = temps[idx]
       return {
         time: `${hour}시`,
-        temp: Math.round(temps[idx]),
-        rawTemp: temps[idx],
+        temp: convertTemp(raw, unit),
+        rawTemp: raw,
         code: codes[idx] ?? 0,
         isCurrent: idx === 0,
       }
     })
-  }, [hourlyData])
+  }, [hourlyData, unit])
 
   if (chartData.length === 0) return null
 
@@ -68,10 +69,10 @@ export default function HourlyChart({ hourlyData }) {
         </div>
         <div className="chart-temp-range">
           <span className="max-tag">
-            <TrendingUp size={14} /> 최고 {maxTemp}°C
+            <TrendingUp size={14} /> 최고 {maxTemp}°{unit}
           </span>
           <span className="min-tag">
-            <TrendingDown size={14} /> 최저 {minTemp}°C
+            <TrendingDown size={14} /> 최저 {minTemp}°{unit}
           </span>
         </div>
       </div>
@@ -105,7 +106,6 @@ export default function HourlyChart({ hourlyData }) {
 
           {/* 각 시각 데이터 포인트 및 레이블 */}
           {points.map((p, idx) => {
-            const weather = getWeatherInfo(p.code)
             return (
               <g key={`point-${idx}`} className="chart-node">
                 {/* 수직 보조선 */}
@@ -158,4 +158,3 @@ export default function HourlyChart({ hourlyData }) {
     </article>
   )
 }
-
